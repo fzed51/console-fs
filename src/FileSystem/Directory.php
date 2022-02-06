@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Console\FileSystem;
 
@@ -117,7 +118,7 @@ class Directory
     /**
      * liste les fichiers d'un dossier
      * @param bool $recurse
-     * @return array
+     * @return array<string>
      */
     public function ls(bool $recurse = false): array
     {

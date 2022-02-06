@@ -8,4 +8,4 @@ parameters:
     # bootstrapFiles:
     #    - bootstrap/define.php
     ignoreErrors:
-        - '#Strict comparison using === between PDOStatement and false will always evaluate to false.#'
+    #    - '#Strict comparison using === between PDOStatement and false will always evaluate to false.#'

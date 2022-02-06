@@ -1,9 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Console\FileSystem;
 
 use Test\TestCase;
 
+/**
+ * Tests de la Console\FileSystem\Directory
+ */
 class DirectoryTest extends TestCase
 {
     /**
@@ -99,5 +103,4 @@ class DirectoryTest extends TestCase
         self::assertEquals('directoryForTest', $dir->getName());
         self::assertEquals(realpath(__DIR__ . '/../directoryForTest'), $dir->getFullName());
     }
-
 }
