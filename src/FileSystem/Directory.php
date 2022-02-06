@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Console\FileSystem;
 
+use LogicException;
 use RuntimeException;
-use SebastianBergmann\Type\LogicException;
 
 /**
  * Directory
  */
-class Directory
+class Directory implements Item
 {
     /** @var string nom du dossier */
     private string $fullname;
