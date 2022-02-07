@@ -62,8 +62,19 @@ class Directory implements Item
         }
         if (self::exists($name)) {
             $dir = new self($name);
-            if (!$force && !$dir->empty()) {
+            $isEmpty = $dir->empty();
+            if (!$force && !$isEmpty) {
                 throw new RuntimeException("impossible de supprimer $name, le dossier n'est pas vide");
+            }
+            if (!$isEmpty) {
+                $files = array_reverse($dir->ls());
+                foreach ($files as $file) {
+                    File::delete($name . DIRECTORY_SEPARATOR . $file);
+                }
+                $directories = array_reverse($dir->lsDirectory());
+                foreach ($directories as $directory) {
+                    self::delete($name . DIRECTORY_SEPARATOR . $directory, true);
+                }
             }
             $dir = null;
             rmdir($name);
