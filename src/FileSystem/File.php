@@ -1,7 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace Console\FileSystem;
-
 
 use LogicException;
 use RuntimeException;
@@ -97,10 +97,10 @@ class File implements Item
      */
     public static function delete(string $name): void
     {
-        if (Directory::exists($name)){
+        if (Directory::exists($name)) {
             throw new \RuntimeException("Impossible de supprimer '$name', c'est un dossier");
         }
-        if (!self::exists($name)){
+        if (!self::exists($name)) {
             return;
         }
         unlink($name);
