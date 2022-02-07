@@ -205,12 +205,13 @@ class Directory implements Item
      * Créer un dossier
      * @param string $name
      * @param int $permission
-     * @return void
+     * @return \Console\FileSystem\Directory
      */
-    public static function create(string $name, int $permission = 0777): void
+    public static function create(string $name, int $permission = 0777): Directory
     {
         if (!self::exists($name) && !mkdir($name, $permission, true) && !is_dir($name)) {
             throw new RuntimeException(sprintf("Le dossier '%s' n'a pu être créé", $name));
         }
+        return new self($name);
     }
 }
