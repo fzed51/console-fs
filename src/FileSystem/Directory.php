@@ -209,7 +209,10 @@ class Directory implements Item
      */
     public static function create(string $name, int $permission = 0777): Directory
     {
-        if (!self::exists($name) && !mkdir($name, $permission, true) && !is_dir($name)) {
+        if (self::exists($name)) {
+            return new self($name);
+        }
+        if (!mkdir($name, $permission, true) && !is_dir($name)) {
             throw new RuntimeException(sprintf("Le dossier '%s' n'a pu être créé", $name));
         }
         return new self($name);
