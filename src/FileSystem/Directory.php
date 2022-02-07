@@ -37,19 +37,6 @@ class Directory implements Item
     }
 
     /**
-     * Créer un dossier
-     * @param string $name
-     * @param int $permission
-     * @return void
-     */
-    public static function create(string $name, int $permission = 0777): void
-    {
-        if (!self::exists($name) && !mkdir($name, $permission, true) && !is_dir($name)) {
-            throw new RuntimeException(sprintf("Le dossier '%s' n'a pu être créé", $name));
-        }
-    }
-
-    /**
      * Supprime un dossier
      * @param string $name
      * @param bool $force
@@ -107,26 +94,6 @@ class Directory implements Item
     }
 
     /**
-     * donne le nom du dossier
-     * @return string
-     */
-    public function getName(): string
-    {
-        $this->checkIfIExist();
-        return basename($this->fullname);
-    }
-
-    /**
-     * donne le nom complet du dossier
-     * @return string
-     */
-    public function getFullName(): string
-    {
-        $this->checkIfIExist();
-        return $this->fullname;
-    }
-
-    /**
      * liste les fichiers d'un dossier
      * @param bool $recurse
      * @return array<string>
@@ -159,5 +126,91 @@ class Directory implements Item
             }
         }
         return $files;
+    }
+
+    /**
+     * liste les fichiers d'un dossier
+     * @param bool $recurse
+     * @return array<string>
+     */
+    public function lsDirectory(bool $recurse = false): array
+    {
+        $this->checkIfIExist();
+        $realPath = realpath($this->fullname);
+        $ios = scandir($realPath);
+        $directories = [];
+        foreach ($ios as $io) {
+            if (in_array($io, ['.', '..'])) {
+                continue;
+            }
+            $ioFull = $realPath . DIRECTORY_SEPARATOR . $io;
+            if (is_dir($ioFull)) {
+                $directories[] = $io;
+            }
+        }
+        if ($recurse) {
+            foreach ($directories as $dirname) {
+                $localDir = new self($realPath . DIRECTORY_SEPARATOR . $dirname);
+                $subDirectories = $localDir->lsDirectory(true);
+                foreach ($subDirectories as $sub) {
+                    $directories[] = $dirname . DIRECTORY_SEPARATOR . $sub;
+                }
+            }
+        }
+        return $directories;
+    }
+
+    /**
+     * donne le nom du dossier
+     * @return string
+     */
+    public function getName(): string
+    {
+        $this->checkIfIExist();
+        return basename($this->fullname);
+    }
+
+    /**
+     * donne le nom complet du dossier
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        $this->checkIfIExist();
+        return $this->fullname;
+    }
+
+    /**
+     * @param string $destination
+     * @return Directory
+     */
+    public function copy(string $destination): Directory
+    {
+        $this->checkIfIExist();
+        $files = $this->ls(true);
+        if (File::exists($destination)) {
+            throw new RuntimeException("Ilmpossible de copier $this->fullname dans un fichier ");
+        }
+        if (!self::exists($destination)) {
+            self::create($destination);
+        }
+        foreach ($files as $filename) {
+            $file = new File($this->fullname . DIRECTORY_SEPARATOR . $filename);
+            $file->copy($destination . DIRECTORY_SEPARATOR . $filename);
+        }
+        return new self($destination);
+    }
+
+    /**
+     * Créer un dossier
+     * @param string $name
+     * @param int $permission
+     * @return void
+     */
+    public static function create(string $name, int $permission = 0777): void
+    {
+        if (!self::exists($name) && !mkdir($name, $permission, true) && !is_dir($name)) {
+            throw new RuntimeException(sprintf("Le dossier '%s' n'a pu être créé", $name));
+        }
     }
 }

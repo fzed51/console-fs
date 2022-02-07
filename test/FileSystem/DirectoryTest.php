@@ -79,6 +79,20 @@ class DirectoryTest extends TestCase
     }
 
     /**
+     * test la suppression d'un dossier non vide
+     * @return void
+     */
+    public function testDeleteNoEmpty(): void
+    {
+        mkdir('testDeleteDirectory');
+        touch('testDeleteDirectory/file.ext');
+        mkdir('testDeleteDirectory/subDirectory');
+        touch('testDeleteDirectory/subDirectory/file.txt');
+        self::assertTrue(Directory::exists('testDeleteDirectory'));
+        Directory::delete('testDeleteDirectory', true);
+        self::assertFalse(Directory::exists('testDeleteDirectory'));
+    }
+    /**
      * Test si un dossier est vide ou pas
      * @return void
      */
@@ -102,5 +116,22 @@ class DirectoryTest extends TestCase
         $dir = new Directory(__DIR__ . '/../directoryForTest');
         self::assertEquals('directoryForTest', $dir->getName());
         self::assertEquals(realpath(__DIR__ . '/../directoryForTest'), $dir->getFullName());
+    }
+
+    /**
+     * @return void
+     */
+    public function testCopy(): void
+    {
+        $dir = new Directory(__DIR__ . '/../directoryForTest');
+        $copiedDir = $dir->copy('copiedDirectory');
+        self::assertEquals('copiedDirectory', $copiedDir->getName());
+        $copiedDir = new Directory('copiedDirectory');
+        $files = $copiedDir->ls(true);
+        self::assertContains('FileForTest', $files);
+        self::assertContains('subDirectory\fileInSubDirectory', $files);
+        Directory::delete('copiedDirectory', true);
+        $dir = null;
+        $copiedDir = null;
     }
 }
