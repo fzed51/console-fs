@@ -61,8 +61,13 @@ class DirectoryTest extends TestCase
      */
     public function testCreate(): void
     {
-        Directory::create('testCreateDirectory');
-        self::assertTrue(is_dir('testCreateDirectory'));
+        if (is_dir('testCreateDirectory')) {
+            rmdir('testCreateDirectory');
+        }
+        $dir = Directory::create('testCreateDirectory');
+        self::assertDirectoryExists('testCreateDirectory');
+        /** @noinspection UnnecessaryAssertionInspection */
+        self::assertInstanceOf(Directory::class, $dir);
         rmdir('testCreateDirectory');
     }
 
@@ -92,6 +97,7 @@ class DirectoryTest extends TestCase
         Directory::delete('testDeleteDirectory', true);
         self::assertFalse(Directory::exists('testDeleteDirectory'));
     }
+
     /**
      * Test si un dossier est vide ou pas
      * @return void
