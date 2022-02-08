@@ -38,7 +38,7 @@ class Path
 
     /**
      * join des éléments de chemin
-     * @param array<string> ...$paths
+     * @param array<string> $paths
      * @return string
      */
     public static function join(string ...$paths): string
