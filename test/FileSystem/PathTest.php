@@ -40,8 +40,8 @@ class PathTest extends TestCase
      */
     public function testEnfBySeparator()
     {
-        self::assertTrue(Path::enfBySeparator('a/'));
-        self::assertTrue(Path::enfBySeparator('a\\'));
-        self::assertFalse(Path::enfBySeparator('a'));
+        self::assertTrue(Path::endBySeparator('a/'));
+        self::assertTrue(Path::endBySeparator('a\\'));
+        self::assertFalse(Path::endBySeparator('a'));
     }
 }

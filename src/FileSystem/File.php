@@ -94,7 +94,7 @@ class File implements Item
     public function copy(string $destination): File
     {
         $this->checkIfIExist();
-        if (Directory::exists($destination) || Path::enfBySeparator($destination)) {
+        if (Directory::exists($destination) || Path::endBySeparator($destination)) {
             $destination = rtrim($destination, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->getName();
         }
         if (!Directory::exists(dirname($destination))) {

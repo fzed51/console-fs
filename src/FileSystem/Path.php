@@ -15,7 +15,7 @@ class Path
      * @param string $path
      * @return bool
      */
-    public static function enfBySeparator(string $path): bool
+    public static function endBySeparator(string $path): bool
     {
         if ($path === '') {
             return false;
