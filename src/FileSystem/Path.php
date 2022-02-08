@@ -49,5 +49,4 @@ class Path
         }
         return implode('/', $nextPath);
     }
-
 }

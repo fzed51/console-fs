@@ -1,9 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Console\FileSystem;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Test de Path
+ */
 class PathTest extends TestCase
 {
     /**
