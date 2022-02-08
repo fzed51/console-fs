@@ -23,6 +23,14 @@ interface Item
     public static function delete(string $name): void;
 
     /**
+     * création d'un item
+     * @param string $name
+     * @param int $permission
+     * @return static
+     */
+    public static function create(string $name, int $permission);
+
+    /**
      * Donne le nom d'un élément
      * @return string
      */

@@ -37,11 +37,52 @@ class File implements Item
     }
 
     /**
+     * suppression d'un fichier
+     * @param string $name
+     * @return void
+     */
+    public static function delete(string $name): void
+    {
+        if (Directory::exists($name)) {
+            throw new \RuntimeException("Impossible de supprimer '$name', c'est un dossier");
+        }
+        if (!self::exists($name)) {
+            return;
+        }
+        unlink($name);
+    }
+
+    /**
+     * créationd'un fichier
+     * @param string $name
+     * @param int $permission
+     * @return \Console\FileSystem\File
+     */
+    public static function create(string $name, int $permission = 0777)
+    {
+        if (self::exists($name)) {
+            throw new \RuntimeException("Impossible de créer '$name', il existe déjà");
+        }
+        if (Directory::exists($name)) {
+            throw new \RuntimeException("Impossible de créer '$name', c'est un dossier");
+        }
+        $directory = dirname($name);
+        Directory::create($directory, $permission);
+        touch($name);
+        chmod($name, $permission);
+        if (!self::exists($name)) {
+            throw new \RuntimeException("'$name', n'a pu être créé");
+        }
+        return new self($name);
+    }
+
+    /**
      * retourne le nom complet d'un fichier
      * @return string
      */
     public function getFullName(): string
     {
+        $this->checkIfIExist();
         return $this->fullname;
     }
 
@@ -53,7 +94,7 @@ class File implements Item
     public function copy(string $destination): File
     {
         $this->checkIfIExist();
-        if (Directory::exists($destination) || $destination[-1] === DIRECTORY_SEPARATOR) {
+        if (Directory::exists($destination) || Path::endBySeparator($destination)) {
             $destination = rtrim($destination, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->getName();
         }
         if (!Directory::exists(dirname($destination))) {
@@ -61,11 +102,11 @@ class File implements Item
         }
         try {
             if (!copy($this->fullname, $destination)) {
-                throw new RuntimeException("La copie de de $this->fullname a échouée");
+                throw new RuntimeException("La copie de de $this->fullname vers '$destination' a échoué");
             }
         } catch (\Throwable $err) {
-            error_log("La copie de de $this->fullname a échouée : " . $err->getMessage());
-            throw new RuntimeException("La copie de de $this->fullname a échouée");
+            error_log("La copie de de '$this->fullname' vers '$destination' a échoué : " . $err->getMessage());
+            throw new RuntimeException("La copie de de $this->fullname vers '$destination' a échoué");
         }
         return new self($destination);
     }
@@ -87,22 +128,7 @@ class File implements Item
      */
     public function getName(): string
     {
+        $this->checkIfIExist();
         return basename($this->fullname);
-    }
-
-    /**
-     * suppression d'un fichier
-     * @param string $name
-     * @return void
-     */
-    public static function delete(string $name): void
-    {
-        if (Directory::exists($name)) {
-            throw new \RuntimeException("Impossible de supprimer '$name', c'est un dossier");
-        }
-        if (!self::exists($name)) {
-            return;
-        }
-        unlink($name);
     }
 }
