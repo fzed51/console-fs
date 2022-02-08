@@ -111,6 +111,14 @@ Retourne une instance Directory du dossier de destination
 
 Nom de la class : `\Console\FileSystem\File`
 
+#### create
+
+Fonction statique pour créer un fichier
+
+```php
+File::create('nom_fichier'); // new File('mon_fichier')
+```
+
 #### delete
 
 Fonction statique pour supprimer un fichier
@@ -157,6 +165,32 @@ $file->copy('nouveau/nom') // new File('./nouveau/nom')
 $file->copy('directory_destination/nouveau_nom.ext') // new File('./directory_destination/nouveau_nom.ext')
 ```
 
-Retourne une instance Directory du dossier de destination
-Si la destination est un dossier ou fini par un séparateur de dossier, alors le fichier garde son nom. Sinon le fichier
-prend le nom de la destination.
+Retourne une instance Directory du dossier de destination Si la destination est un dossier ou fini par un séparateur de
+dossier, alors le fichier garde son nom. Sinon le fichier prend le nom de la destination.
+
+### Path
+
+#### endBySeparator
+
+methode static permetant de tester si un chemin se termine par un séparateur de dossier
+
+```php
+Path::endBySeparator('a'); // false
+Path::endBySeparator('a/'); // true
+```
+
+#### normalize
+
+Nettoie et harmonise l'écriture des chemins
+
+```php
+Path::nomalize('a/b\\c'); // a/b/c
+```
+
+#### join
+
+Assemble des éléments de chemin ensemble
+
+```php
+Path::join('a', 'b\\c', 'd'); // a/b/c/d
+```
