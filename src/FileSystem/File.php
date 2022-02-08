@@ -82,6 +82,7 @@ class File implements Item
      */
     public function getFullName(): string
     {
+        $this->checkIfIExist();
         return $this->fullname;
     }
 
@@ -93,7 +94,7 @@ class File implements Item
     public function copy(string $destination): File
     {
         $this->checkIfIExist();
-        if (Directory::exists($destination) || $destination[-1] === DIRECTORY_SEPARATOR) {
+        if (Directory::exists($destination) || Path::enfBySeparator($destination)) {
             $destination = rtrim($destination, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->getName();
         }
         if (!Directory::exists(dirname($destination))) {
@@ -101,11 +102,11 @@ class File implements Item
         }
         try {
             if (!copy($this->fullname, $destination)) {
-                throw new RuntimeException("La copie de de $this->fullname a échouée");
+                throw new RuntimeException("La copie de de $this->fullname vers '$destination' a échoué");
             }
         } catch (\Throwable $err) {
-            error_log("La copie de de $this->fullname a échouée : " . $err->getMessage());
-            throw new RuntimeException("La copie de de $this->fullname a échouée");
+            error_log("La copie de de '$this->fullname' vers '$destination' a échoué : " . $err->getMessage());
+            throw new RuntimeException("La copie de de $this->fullname vers '$destination' a échoué");
         }
         return new self($destination);
     }
@@ -127,6 +128,7 @@ class File implements Item
      */
     public function getName(): string
     {
+        $this->checkIfIExist();
         return basename($this->fullname);
     }
 }
