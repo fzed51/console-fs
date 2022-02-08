@@ -92,6 +92,6 @@ class FileTest extends TestCase
         $newFile = $file->copy('directory/');
         self::assertTrue(is_file('directory/FileForTest'));
         self::assertEquals(realpath('directory/FileForTest'), $newFile->getFullName());
-        // unlink('directory/FileForTest');
+        unlink('directory/FileForTest');
     }
 }
